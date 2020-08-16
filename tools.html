@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Noto+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto">
+<style>
+body {
+    font-family: 'Noto Serif', serif;
+}
+</style>
+</head>
+
+<body>
+    <h1><center>Size and cost analysis</h1>
+ 
+    <div ng-app="" ng-init="sheets_per_packet=100;gsm=300; card_length=0; card_width=0"> 
+        <label for="card_length">Length:</label><br>
+        <input id="card_length" type="number" ng-model="card_length" placeholder="Inches" ><br><br>
+        
+
+        <label for="card_width">Width:</label><br>
+        <input id="card_width" type="number" ng-model="card_width" placeholder="Inches" ng-bind="card_width"><br><br>
+
+        <label for="card_qty">Total Quantity:</label><br>
+        <input id="card_qty" type="number" ng-model="card_qty" placeholder="Integer"><br><br>
+
+        <label for="boxes_per_lw">Number of pieces on the plate  (1 up, 2 up etc.):</label><br>
+        <input id="boxes_per_lw" type="number" ng-model="boxes_per_lw" placeholder="Integer"><br><br>
+
+        <label for="pkr_per_kg">Cost per Kg:</label><br>
+        <input id="pkr_per_kg" type="number" ng-model="pkr_per_kg" placeholder="PKR"><br><br>
+
+        <label for="gsm">GSM (grams per square meter):</label><br>
+        <input id="gsm" type="number" ng-model="gsm" placeholder="Number" ng-bind="gsm"><br><br>
+            
+        <label for="sheets_per_packet">Sheets per packet:</label><br>
+        <input type="number" id="sheets_per_packet"  ng-model="sheets_per_packet" ng-bind="sheets_per_packet"><br><br>
+
+
+        
+</div>
+
+
+
+</body>
+</html>
+
+
