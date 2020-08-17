@@ -17,10 +17,18 @@
 </head>
 
 <body>
+    
+    <div  style="width:700px; margin:0 auto;" ng-app="sizeEstimation_app" ng-controller="mainController"
+        ng-init="sheets_per_packet=100;gsm=300; card_length=9.5; card_width=8.5; card_qty=1000; boxes_per_lw=1; pkr_per_kg=210;  ">
 
-    <div style="width:700px; margin:0 auto;" ng-app="sizeEstimation_app" ng-controller="mainController"
-        ng-init="sheets_per_packet=100;gsm=300; card_length=9.5; card_width=8.5; card_qty=1000; boxes_per_lw=1; pkr_per_kg=210; ">
-        <h1>Size and cost analysis</h1>
+        <div>
+            <button ng-click="page='first'">Card/Paper Analysis</button>
+            <button ng-click="page='second'">Costing</button>
+        </div>
+
+        <div ng-show="page === 'first'">
+
+        <h1>Size and cost analysis of card/paper</h1>
         <table>
             <tr class="spaceUnder">
                 <td style="text-align:right">
@@ -29,7 +37,7 @@
 
                 <td style="text-align:left">
                     <input id="card_length" type="number" ng-model="card_length" placeholder="Inches"
-                        ng-bind="card_length" ng-change="mainFunction()">
+                        ng-bind="card_length" ng-change="mainFunction()" class="form-control input-lg">
                 </td>
             </tr>
 
@@ -95,13 +103,20 @@
                 <td>
                 </td>
                 <td style="text-align:right">
-                    <button type="button" ng-click="mainFunction()">Calculate</button>
+                    <button ng-show="false" id="card_button" type="button" ng-click="mainFunction()">Calculate</button>
                 </td>
             </tr>
         </table>
 
+        <hr style="border: 1px dotted gray">
+
 
         <table>
+            <tr>
+                <td style="text-align:right"> Wastage cost for [ {{card_length}}   x   {{card_width}} ]: &nbsp;&nbsp; </td>
+                <td style="text-align:left"> <span id='number-default'>{{wastage | number:2}} </span> <br> {{wastage_status}}</td>
+            </tr>
+
             <tr>
                 <td style="text-align:right"> Packet Size: &nbsp;&nbsp; </td>
                 <td style="text-align:left"> {{sz}} </td>
@@ -109,7 +124,7 @@
 
             <tr>
                 <td style="text-align:right"> Number of packets required: &nbsp;&nbsp; </td>
-                <td style="text-align:left"> {{req_pck_num}} </td>
+                <td style="text-align:left"> <span id='number-default'>{{req_pck_num | number:2}}</span> </td>
             </tr>
 
             <tr>
@@ -129,19 +144,26 @@
             </tr>
 
             <tr>
-                <td style="text-align:right"> Total estimated cost: &nbsp;&nbsp; </td>
+                <td style="text-align:right"> Estimated total cost of card/paper: &nbsp;&nbsp; </td>
                 <td style="text-align:left"> <span id='number-default'> {{total_cost | number:0}}</span> PKR </td>
             </tr>
 
             <tr>
-                <td style="text-align:right"> Cost per piece: &nbsp;&nbsp; </td>
-                <td style="text-align:left"> <span id='number-default'> {{cost_per_piece | number:6}}</span> PKR </td>
+                <td style="text-align:right"> Cost per piece (or box) of card/paper: &nbsp;&nbsp; </td>
+                <td style="text-align:left"> <span  id='number-default'> {{cost_per_piece | number:6}} PKR</span>  </td>
             </tr>
 
+            <tr>
+                <td></td>
+                <td style="text-align:left">
+                    <br>
+                    <button ng-show="true" id="generate_plot" type="button" ng-click="generatePlot()">Generate Plot</button>
+                </td>
+            </tr>
 
         </table>
 
-
+        </div>
 
     </div>
 
@@ -164,10 +186,7 @@
                 [30, 50],
                 [50, 30],
             ];
-
-
-
-
+            
 
             $scope.mainFunction = function () {
                 var params = {
@@ -186,7 +205,23 @@
                 $scope.total_cost = res.total_cost;
                 $scope.cost_per_piece = res.cost_per_piece;
 
+                $scope.wastage = res.minima*res.output_qty;
+                if ($scope.wastage<=250){
+                    $scope.wastage_status = ":)";
+
+                }else{
+                    $scope.wastage_status = "Caution: wastage cost is high :(";
+
+                }
+
             }
+            $scope.page='first';
+
+            $scope.$on('$viewContentLoaded', function() {
+                //call it here
+                $scope.mainFunction;
+            });
+            
         });
 
         function cl_packet_size(x) {
@@ -205,7 +240,7 @@
                 wastage = e_L + e_R - l_wastage * w_wastage;
 
                 pck_cnt = x.card_qty / (Math.floor(ns[it][0]) * Math.floor(ns[it][1]) * x.boxes_per_lw * x.sheets_per_packet);
-                req_pck_num = Math.ceil(pck_cnt);
+                req_pck_num = pck_cnt;//Math.ceil(pck_cnt);
                 output_qty = req_pck_num * x.sheets_per_packet * Math.floor(ns[it][0]) * Math.floor(ns[it][1]) * x.boxes_per_lw;
 
                 wastage = wastage / output_qty;
@@ -239,6 +274,10 @@
             console.table(ns);
             return y;
         }
+
+        window.onload = function() {
+            document.getElementById('card_button').click();
+        };
 
     </script>
 </body>
