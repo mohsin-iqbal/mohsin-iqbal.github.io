@@ -186,7 +186,6 @@
                 [30, 50],
                 [50, 30],
             ];
-            
 
             $scope.mainFunction = function () {
                 var params = {
@@ -207,10 +206,10 @@
 
                 $scope.wastage = res.minima*res.output_qty;
                 if ($scope.wastage<=250){
-                    $scope.wastage_status = ":)";
+                    $scope.wastage_status = " :) ";
 
                 }else{
-                    $scope.wastage_status = "Caution: wastage cost is high :(";
+                    $scope.wastage_status = " Caution: wastage cost is high :(";
 
                 }
 
