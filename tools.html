@@ -19,7 +19,7 @@
 <body>
 
     <div style="width:700px; margin:0 auto;" ng-app="sizeEstimation_app" ng-controller="mainController"
-        ng-init="sheets_per_packet=100;gsm=300; card_length=9.5; card_width=8.5; card_qty=1000; boxes_per_lw=1; pkr_per_kg=210;  ">
+        ng-init="sheets_per_packet=100;gsm=300; card_length=9; card_width=8.8; card_qty=1000; boxes_per_lw=1; pkr_per_kg=210;  ">
 
         <div>
             <button ng-click="page='first'">Card/Paper Analysis</button>
@@ -29,86 +29,100 @@
         <div ng-show="page === 'first'">
 
             <h1>Size and cost analysis of card/paper</h1>
+
             <table>
-                <tr class="spaceUnder">
-                    <td style="text-align:right">
-                        <label for="card_length">Length: &nbsp;&nbsp;</label>
-                    </td>
+            <tr>
+                <td>
+                <table>
+                    <tr class="spaceUnder">
+                        <td style="text-align:right">
+                            <label for="card_length">Length: &nbsp;&nbsp;</label>
+                        </td>
 
-                    <td style="text-align:left">
-                        <input id="card_length" type="number" ng-model="card_length" placeholder="Inches"
-                            ng-bind="card_length" ng-change="mainFunction()" class="form-control input-lg">
-                    </td>
-                </tr>
+                        <td style="text-align:left">
+                            <input id="card_length" type="number" ng-model="card_length" placeholder="Inches"
+                                ng-bind="card_length" ng-change="mainFunction()" class="form-control input-lg">
+                        </td>
+                    </tr>
 
-                <tr class="spaceUnder">
-                    <td style="text-align:right">
-                        <label for="card_width">Width: &nbsp;&nbsp;</label>
-                    </td>
-                    <td style="text-align:left">
-                        <input id="card_width" type="number" ng-model="card_width" placeholder="Inches"
-                            ng-bind="card_width" ng-change="mainFunction()">
-                    </td>
-                </tr>
+                    <tr class="spaceUnder">
+                        <td style="text-align:right">
+                            <label for="card_width">Width: &nbsp;&nbsp;</label>
+                        </td>
+                        <td style="text-align:left">
+                            <input id="card_width" type="number" ng-model="card_width" placeholder="Inches"
+                                ng-bind="card_width" ng-change="mainFunction()">
+                        </td>
+                    </tr>
 
-                <tr class="spaceUnder">
-                    <td style="text-align:right">
-                        <label for="card_qty">Total Quantity: &nbsp;&nbsp;</label>
-                    </td>
-                    <td style="text-align:left">
-                        <input id="card_qty" type="number" ng-model="card_qty" placeholder="Integer" ng-bind="card_qty"
-                            ng-change="mainFunction()">
-                    </td>
-                </tr>
+                    <tr class="spaceUnder">
+                        <td style="text-align:right">
+                            <label for="card_qty">Total Quantity: &nbsp;&nbsp;</label>
+                        </td>
+                        <td style="text-align:left">
+                            <input id="card_qty" type="number" ng-model="card_qty" placeholder="Integer"
+                                ng-bind="card_qty" ng-change="mainFunction()">
+                        </td>
+                    </tr>
 
-                <tr class="spaceUnder">
-                    <td style="text-align:right">
-                        <label for="boxes_per_lw">Number of pieces on the plate:&nbsp;&nbsp;</label>
-                    </td>
-                    <td style="text-align:left">
-                        <input id="boxes_per_lw" type="number" ng-model="boxes_per_lw" placeholder="e.g., 1 up or 2 up"
-                            ng-bind="boxes_per_lw" ng-change="mainFunction()">
-                    </td>
-                </tr>
+                    <tr class="spaceUnder">
+                        <td style="text-align:right">
+                            <label for="boxes_per_lw">Number of pieces on the plate:&nbsp;&nbsp;</label>
+                        </td>
+                        <td style="text-align:left">
+                            <input id="boxes_per_lw" type="number" ng-model="boxes_per_lw"
+                                placeholder="e.g., 1 up or 2 up" ng-bind="boxes_per_lw" ng-change="mainFunction()">
+                        </td>
+                    </tr>
 
-                <tr class="spaceUnder">
-                    <td style="text-align:right">
-                        <label for="pkr_per_kg">Cost per Kg:&nbsp;&nbsp;</label>
-                    </td>
-                    <td style="text-align:right">
-                        <input id="pkr_per_kg" type="number" ng-model="pkr_per_kg" placeholder="PKR"
-                            ng-bind="pkr_per_kg" ng-change="mainFunction()">
-                    </td>
-                </tr>
+                    <tr class="spaceUnder">
+                        <td style="text-align:right">
+                            <label for="pkr_per_kg">Cost per Kg:&nbsp;&nbsp;</label>
+                        </td>
+                        <td style="text-align:right">
+                            <input id="pkr_per_kg" type="number" ng-model="pkr_per_kg" placeholder="PKR"
+                                ng-bind="pkr_per_kg" ng-change="mainFunction()">
+                        </td>
+                    </tr>
 
-                <tr class="spaceUnder">
-                    <td style="text-align:right">
-                        <label for="gsm">GSM (grams per square meter):&nbsp;&nbsp;</label>
-                    </td>
-                    <td style="text-align:right">
-                        <input id="gsm" type="number" ng-model="gsm" placeholder="Number" ng-bind="gsm"
-                            placeholder="Integer" ng-change="mainFunction()">
-                    </td>
-                </tr>
+                    <tr class="spaceUnder">
+                        <td style="text-align:right">
+                            <label for="gsm">GSM (grams per square meter):&nbsp;&nbsp;</label>
+                        </td>
+                        <td style="text-align:right">
+                            <input id="gsm" type="number" ng-model="gsm" placeholder="Number" ng-bind="gsm"
+                                placeholder="Integer" ng-change="mainFunction()">
+                        </td>
+                    </tr>
 
-                <tr class="spaceUnder">
-                    <td style="text-align:right">
-                        <label for="sheets_per_packet">Number of sheets per packet:&nbsp;&nbsp;</label>
-                    </td>
-                    <td style="text-align:right">
-                        <input type="number" id="sheets_per_packet" ng-model="sheets_per_packet"
-                            ng-bind="sheets_per_packet" placeholder="Integer" ng-change="mainFunction()">
-                    </td>
-                </tr>
+                    <tr class="spaceUnder">
+                        <td style="text-align:right">
+                            <label for="sheets_per_packet">Number of sheets per packet:&nbsp;&nbsp;</label>
+                        </td>
+                        <td style="text-align:right">
+                            <input type="number" id="sheets_per_packet" ng-model="sheets_per_packet"
+                                ng-bind="sheets_per_packet" placeholder="Integer" ng-change="mainFunction()">
+                        </td>
+                    </tr>
 
-                <tr class="spaceUnder">
-                    <td>
-                    </td>
-                    <td style="text-align:right">
-                        <button ng-show="false" id="card_button" type="button"
-                            ng-click="mainFunction()">Calculate</button>
-                    </td>
-                </tr>
+                    <tr class="spaceUnder">
+                        <td>
+                        </td>
+                        <td style="text-align:right">
+                            <button ng-show="false" id="card_button" type="button"
+                                ng-click="mainFunction()">Calculate</button>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+
+            <td>
+                <span style="text-align:top"> &nbsp; Possible sizes are: <br>
+                <span ng-bind="szs_text" ng-model="szs_text"> </span>
+            </td>
+            </tr>
             </table>
 
             <hr style="border: 1px dotted gray">
@@ -139,7 +153,7 @@
 
                 <tr>
                     <td style="text-align:right"> Output quantity per packet: &nbsp;&nbsp; </td>
-                    <td style="text-align:left"> <span id='number-default'>{{output_qty_per_pck | number:0}}</span>
+                    <td style="text-align:left"> <span id='number-default'>{{output_qty_per_pck | number:0}}</span> 
                     </td>
                 </tr>
 
@@ -160,41 +174,37 @@
                     </td>
                 </tr>
 
-
-
             </table>
 
             <br>
-            <center>
-            <canvas id="sheet_canvas" width="400" height="400">
-            </canvas>
-        </center>
-
+            <canvas id="sheet_canvas" width="400" height="400"></canvas>
         </div>
-
-
 
     </div>
 
     <script>
         var app = angular.module('sizeEstimation_app', []);
         app.controller('mainController', function ($scope) {
-            szs = [
+            szs_orig = [
                 [20, 30],
-                [30, 20],
                 [22, 28],
-                [28, 22],
                 [23, 36],
-                [36, 23],
                 [25, 30],
-                [30, 25],
                 [25, 36],
-                [36, 25],
                 [31, 43],
-                [43, 31],
                 [30, 50],
-                [50, 30],
             ];
+
+            szs=[];
+            for(it=0;it<szs_orig.length;it=it+1){
+                szs[szs.length] = [szs_orig[it][0], szs_orig[it][1]];
+                szs[szs.length] = [szs_orig[it][1], szs_orig[it][0]]; 
+            }
+
+
+
+
+            
 
             $scope.mainFunction = function () {
                 var params = {
@@ -204,6 +214,9 @@
                     sheets_per_packet: sheets_per_packet.value,
                     szs: szs
                 };
+
+                $scope.szs = szs;
+
                 res = cl_packet_size(params);
                 $scope.sz = res.sz;
                 $scope.req_pck_num = res.req_pck_num;
@@ -229,31 +242,152 @@
             }
             $scope.page = 'first';
 
-
             $scope.generatePlot = function () {
                 var c = document.getElementById("sheet_canvas");
                 var ctx = c.getContext("2d");
-                ctx.clearRect(0, 0, c.width, c.height);
 
-                ctx.moveTo(12, 12);
-                ctx.lineTo(200, 100);
-
-                ctx.stroke = "black";
-
-                ctx.fillText( 'Sheet size : [ '+$scope.sz[0]+' x '+$scope.sz[1]+' ]', c.width/2-50, 15);
-                ctx.fillText( 'Box/piece size : [ '+parseFloat(card_length.value).toFixed(2)+' x '+parseFloat(card_width.value).toFixed(2)+' ]', c.width/2-66, 30);
+                //ctx.clear();
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.beginPath();
 
 
-                wdth = 250*($scope.sz[0]/$scope.sz[1]);
-                ctx.strokeRect(c.width/2-wdth/2, 40, wdth, 250 );
+                ctx.globalAlpha = 0.5;
+                p_width = 220;
+                p_hight = 220 * ($scope.sz[0] / $scope.sz[1]);
+                // draw rectangle
+                x_coord = c.width / 2.0 - p_width / 2.0;
+                ctx.strokeRect(x_coord, 40.0, parseFloat(p_width), p_hight);
 
 
+                ctx.strokeStyle = 'red';
+                ctx.fillStyle = 'red';
 
+                ctx.beginPath();
+                // horizontal lines                    
+                x_shift = (p_width * $scope.card_width / $scope.sz[1]);
+                for (it = 0; it < Math.floor($scope.ns[1]); it++) {
+                    ctx.moveTo(c.width / 2.0 - p_width / 2.0 + (it + 1) * x_shift, 40);
+                    ctx.lineTo(c.width / 2.0 - p_width / 2.0 + (it + 1) * x_shift, p_hight + 40);
+                    ctx.stroke();
+                }
+                x_coord = c.width / 2.0 - p_width / 2.0 + (Math.floor($scope.ns[1])) * x_shift;
+                ctx.fillRect(x_coord, 40, p_width - Math.floor($scope.ns[1]) * x_shift, p_hight);
+                x_coord_end = x_coord;// + Math.floor($scope.ns[1])*x_shift;
+                ctx.closePath();
+
+                ctx.beginPath();
+                ctx.strokeStyle = 'blue';
+                ctx.fillStyle = 'blue';
+                // vertical lines
+                y_shift = p_hight * $scope.card_length / $scope.sz[0];
+                x_coord = c.width / 2.0 - p_width / 2.0;
+                for (it = 0; it < Math.floor($scope.ns[0]); it++) {
+                    ctx.moveTo(x_coord, 40 + y_shift * (it + 1));
+                    ctx.lineTo(parseFloat(p_width) + x_coord, 40 + y_shift * (it + 1));
+                    ctx.stroke();
+                }
+                y_coord = 40 + y_shift * Math.floor($scope.ns[0]);
+
+                console.log("   " + Math.abs(p_hight - Math.floor($scope.ns[0]) * y_shift) + "  ");
+                if (Math.abs(p_hight - Math.floor($scope.ns[0]) * y_shift) > 0.0001) {
+                    ctx.fillRect(x_coord, y_coord, p_width, p_hight - Math.floor($scope.ns[0]) * y_shift);
+                }
                 //ctx.fillText( $scope.ns, 10, 60);
-                
+                ctx.closePath();
+
+
+                ctx.beginPath();
+                ctx.globalAlpha = 1;
+                ctx.strokeStyle = 'black';
+                ctx.fillStyle = 'black';
+                ctx.fillText('Sheet size : [ ' + $scope.sz[0] + ' x ' + $scope.sz[1] + ' ]', parseFloat(c.width / 2 - 50), 8.0);
+                ctx.fillText('Box/piece size : [ ' + parseFloat(card_length.value).toFixed(2) + ' x ' + parseFloat(card_width.value).toFixed(2) + ' ]', c.width / 2 - 66.0, 22.0);
+
+                blue_area = ($scope.sz[0] - Math.floor($scope.ns[0]) * $scope.card_length);
+                if (Math.abs(blue_area) > 0.00001) {
+                    ctx.strokeStyle = 'blue';
+                    ctx.fillStyle = 'blue';
+                    ctx.fillText('Blue  Area: [' + blue_area.toFixed(2) + ' x ' + $scope.sz[1] + ']', (c.width - p_width) / 2.0 + 4, 36 + Math.floor($scope.ns[0]) * y_shift);
+                }
+                ctx.save();
+                red_area = ($scope.sz[1] - Math.floor($scope.ns[1]) * $scope.card_width);
+                if (Math.abs(red_area) > 0.000001) {
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "middle";
+                    ctx.translate(x_coord_end - 8, 140);
+                    ctx.rotate(-Math.PI / 2);
+                    ctx.strokeStyle = 'red';
+                    ctx.fillStyle = 'red';
+                    ctx.fillText('Red  Area: [' + $scope.sz[0] + ' x ' + red_area.toFixed(2) + ']', 0, 0);
+                }
+                ctx.restore();
+                ctx.closePath();
+
+                // vertical green line
+                draw_vertical_line(ctx, c.width / 2.0 - p_width / 2.0, 40, 40 + y_shift, $scope.card_length + "\'\'")
+
+
+                // horizontal green line
+                draw_horizontal_line(ctx, c.width / 2.0 - p_width / 2.0, c.width / 2.0 - p_width / 2.0 + x_shift, 40, $scope.card_width + "\'\'");
+
+
+
+                //ctx.restore();
+
+
             };
 
         });
+
+        function draw_horizontal_line(ctx, x1, x2, y, txt) {
+            ctx.save();
+            ctx.beginPath();
+
+            ctx.strokeStyle = 'green';
+            ctx.lineWidth = 1.3;
+            ctx.moveTo(x1, y - 7);
+            ctx.lineTo(x2, y - 7);
+            ctx.stroke();
+
+            ctx.moveTo(x1, y - 2);
+            ctx.lineTo(x1, y - 12);
+            ctx.stroke();
+
+            ctx.moveTo(x2, y - 2);
+            ctx.lineTo(x2, y - 12);
+            ctx.stroke();
+
+            ctx.closePath();
+
+            ctx.fillText(txt, x1 + (x2 - x1) / 2 - 5, y - 7 - 2);
+
+            ctx.restore();
+        }
+
+        function draw_vertical_line(ctx, x, y1, y2, txt) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.strokeStyle = 'green';
+            ctx.lineWidth = 1.3;
+            ctx.moveTo(x - 7, y1);
+            ctx.lineTo(x - 7, y2);
+            ctx.stroke();
+
+            ctx.moveTo(x - 12, y1);
+            ctx.lineTo(x - 2, y1);
+            ctx.stroke();
+
+            ctx.moveTo(x - 12, y2);
+            ctx.lineTo(x - 2, y2);
+            ctx.stroke();
+            ctx.closePath();
+
+            ctx.fillText(txt, x - 7 - 22, y1 + (y2 - y1) / 2);
+
+            ctx.restore();
+
+        }
+
 
         function cl_packet_size(x) {
             ns = [];
