@@ -27,7 +27,7 @@
 
         <div ng-show="page === 'first'">
 
-            <h1>Size and cost analysis of card</h1>
+            <h1>Size and cost analysis of {{material}}</h1>
 
             <table style="margin-left:40px">
                 <tr class="spaceUnder">
@@ -126,7 +126,7 @@
                 <tr>
                     <td style="text-align:right"> Wastage cost for [ {{card_length}} x {{card_width}} ]: &nbsp;&nbsp;
                     </td>
-                    <td style="text-align:left"> <span id='number-default'>{{wastage | number:2}} </span> <br> {{wastage_status}}
+                    <td style="text-align:left"> <span id='number-default'>{{wastage | number:2}} PKR, </span> {{wastage_status}}
                     </td>
                 </tr>
 
