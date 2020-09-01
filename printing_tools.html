@@ -402,8 +402,9 @@
             ctx.save();
             ctx.beginPath();
 
-            ctx.strokeStyle = 'green';
-            ctx.lineWidth = 1.3;
+            ctx.strokeStyle = 'black';
+            ctx.fillStyle = 'black';
+            ctx.lineWidth = 0.8;
             ctx.moveTo(x1, y - 7);
             ctx.lineTo(x2, y - 7);
             ctx.stroke();
@@ -426,8 +427,10 @@
         function draw_vertical_line(ctx, x, y1, y2, txt) {
             ctx.save();
             ctx.beginPath();
-            ctx.strokeStyle = 'green';
-            ctx.lineWidth = 1.3;
+
+            ctx.strokeStyle = 'black';
+            ctx.fillStyle = 'black';
+            ctx.lineWidth = 0.8;
             ctx.moveTo(x - 7, y1);
             ctx.lineTo(x - 7, y2);
             ctx.stroke();
