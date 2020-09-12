@@ -20,9 +20,9 @@
 
     <div style="width:700px; margin:0 auto;" ng-app="sizeEstimation_app" ng-controller="mainController" ng-init=" sheets_per_packet=100;gsm=300; card_length=9; card_width=8.8; card_qty=1000; boxes_per_lw=1; pkr_per_kg=210;  ">
 
-        <div>
-            <button ng-click="page='first'">Card/Paper Analysis</button>
-            <button ng-click="page='second'">Costing</button>
+        <div style='position: static;'>
+            <button ng-click="page='first'" style='position: static;'>Card/Paper Analysis</button>
+            <button ng-click="page='second'" style='position: static;'>Costing</button>
         </div>
 
         <div ng-show="page === 'first'">
@@ -158,7 +158,9 @@
                 </tr>
 
                 <tr>
-                    <td style="text-align:right"> Estimated total cost of {{material}}: &nbsp;&nbsp; </td>
+                    <td style="text-align:right">
+                        Estimated total cost of {{material}}: &nbsp;&nbsp;
+                    </td>
                     <td style="text-align:left"> <span id='number-default'> {{total_cost | number:0}}</span> PKR </td>
                 </tr>
 
