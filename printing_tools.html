@@ -3,6 +3,8 @@
 
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-cookies.min.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Noto+Serif&display=swap" rel="stylesheet">
     <style>
         body {
@@ -18,7 +20,7 @@
 
 <body>
 
-    <div style="width:700px; margin:0 auto;" ng-app="sizeEstimation_app" ng-controller="mainController" ng-init=" sheets_per_packet=100;gsm=300; card_length=9; card_width=8.8; card_qty=1000; boxes_per_lw=1; pkr_per_kg=210;  ">
+    <div style="width:700px; margin:0 auto;" ng-app="sizeEstimation_app" ng-controller="mainController" ng-init=" sheets_per_packet=100;gsm=300; card_qty=1000; boxes_per_lw=1; pkr_per_kg=210;  ">
 
         <div style='position: static;'>
             <button ng-click="page='first'" style='position: static;'>Card/Paper Analysis</button>
@@ -181,323 +183,349 @@
             <span ng-repeat="x in szs_orig"> [{{x[0]}}"  &nbsp &#10005 &nbsp {{x[1]}}"] <br></span>
 
 
-        </div>
+            <script>
+                function getCookie(c_name) {
+                    var name = c_name + "=";
+                    var ca = document.cookie.split(';');
+                    for (var i = 0; i < ca.length; i++) {
+                        var c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                            c = c.substring(1);
+                        }
+                        if (c.indexOf(name) == 0) {
+                            return c.substring(name.length, c.length);
+                        }
+                    }
+                    return "";
+                }
 
-    </div>
+                function setCookie(card_length) {
+                    document.cookie = "card_length=" + card_length + ";max-age=2592000;path=/;SameSite=Secure;";
+                }
 
-    <script>
-        var app = angular.module('sizeEstimation_app', []);
 
-        app.controller('mainController', function($scope) {
-            // card sizes
-            card_szs = [
-                [20, 30],
-                [22, 28],
-                [23, 36],
-                [25, 30],
-                [25, 36],
-                [31, 43],
-                [30, 50],
-            ];
-            // paper sizes
-            paper_szs = [
-                [29, 43],
-            ];
-            szs_orig = card_szs;
-            $scope.szs_orig = szs_orig;
+                var app = angular.module('sizeEstimation_app', []);
+                app.controller('mainController', function($scope) {
 
-            szs = [];
-            for (it = 0; it < szs_orig.length; it = it + 1) {
-                szs[szs.length] = [szs_orig[it][0], szs_orig[it][1]];
-                szs[szs.length] = [szs_orig[it][1], szs_orig[it][0]];
-            }
+                    if (getCookie('card_length').length != 0)
+                        $scope.card_length = getCookie('card_length')
+                    else
+                        $scope.card_length = 9;
 
-            $scope.radioClick = function() {
-                if ($scope.material.localeCompare('card') == 0) {
-                    // card
+                    $scope.card_width = 8.8;
+                    //setCookie(card_length.value);
+                    //if (getCookie('card_length').length != 0)
+                    //    $scope.card_length = getCookie('card_length');
+
+
+                    // card sizes
+                    card_szs = [
+                        [20, 30],
+                        [22, 28],
+                        [23, 36],
+                        [25, 30],
+                        [25, 36],
+                        [31, 43],
+                        [30, 50],
+                    ];
+                    // paper sizes
+                    paper_szs = [
+                        [29, 43],
+                    ];
                     szs_orig = card_szs;
-                } else {
-                    // paper
-                    szs_orig = paper_szs;
+                    $scope.szs_orig = szs_orig;
 
-                }
-                $scope.szs_orig = szs_orig;
+                    szs = [];
+                    for (it = 0; it < szs_orig.length; it = it + 1) {
+                        szs[szs.length] = [szs_orig[it][0], szs_orig[it][1]];
+                        szs[szs.length] = [szs_orig[it][1], szs_orig[it][0]];
+                    }
+
+                    $scope.radioClick = function() {
+                        if ($scope.material.localeCompare('card') == 0) {
+                            // card
+                            szs_orig = card_szs;
+                        } else {
+                            // paper
+                            szs_orig = paper_szs;
+
+                        }
+                        $scope.szs_orig = szs_orig;
+
+                        szs = [];
+                        for (it = 0; it < szs_orig.length; it = it + 1) {
+                            szs[szs.length] = [szs_orig[it][0], szs_orig[it][1]];
+                            szs[szs.length] = [szs_orig[it][1], szs_orig[it][0]];
+                        }
+
+                        $scope.mainFunction();
+
+                    }
+
+
+                    $scope.mainFunction = function() {
+
+                        console.log($scope.material);
+                        if (typeof $scope.material == 'undefined') {
+                            $scope.material = 'card';
+                        }
+
+                        var params = {
+                            card_length: card_length.value,
+                            card_width: card_width.value,
+                            card_qty: card_qty.value,
+                            boxes_per_lw: boxes_per_lw.value,
+                            pkr_per_kg: pkr_per_kg.value,
+                            gsm: gsm.value,
+                            sheets_per_packet: sheets_per_packet.value,
+                            szs: szs
+                        };
+
+                        $scope.szs = szs;
+
+                        res = cl_packet_size(params);
+                        $scope.sz = res.sz;
+                        $scope.req_pck_num = res.req_pck_num;
+                        $scope.output_qty = res.output_qty;
+                        $scope.output_qty_per_pck = res.output_qty_per_pck;
+                        $scope.cost_per_pck = res.cost_per_pck;
+                        $scope.total_cost = res.total_cost;
+                        $scope.cost_per_piece = res.cost_per_piece;
+                        $scope.ns = res.ns;
+
+                        $scope.wastage = res.minima * res.output_qty;
+                        if ($scope.wastage <= 250) {
+                            $scope.wastage_status = " :) ";
+
+                        } else {
+                            $scope.wastage_status = " Caution: wastage cost is high :(";
+
+                        }
+                        $scope.generatePlot();
+
+                        setCookie(card_length.value);
+
+                    }
+                    $scope.page = 'first';
+
+                    $scope.generatePlot = function() {
+                        var c = document.getElementById("sheet_canvas");
+
+                        c.width = 400;
+                        c.height = 600;
+                        var ctx = c.getContext("2d");
+
+                        //ctx.clear();
+                        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                        ctx.beginPath();
+
+
+                        ctx.globalAlpha = 0.5;
+                        p_width = 220;
+                        p_hight = 220 * ($scope.sz[0] / $scope.sz[1]);
+                        // draw rectangle
+                        x_coord = c.width / 2.0 - p_width / 2.0;
+
+                        c.width = 400;
+                        c.height = p_hight + 60;
+
+                        ctx.strokeRect(x_coord, 40.0, parseFloat(p_width), p_hight);
+
+                        ctx.strokeStyle = 'red';
+                        ctx.fillStyle = 'red';
+
+                        ctx.beginPath();
+                        // horizontal lines                    
+                        x_shift = (p_width * $scope.card_width / $scope.sz[1]);
+                        for (it = 0; it < Math.floor($scope.ns[1]); it++) {
+                            ctx.moveTo(c.width / 2.0 - p_width / 2.0 + (it + 1) * x_shift, 40);
+                            ctx.lineTo(c.width / 2.0 - p_width / 2.0 + (it + 1) * x_shift, p_hight + 40);
+                            ctx.stroke();
+                        }
+                        x_coord = c.width / 2.0 - p_width / 2.0 + (Math.floor($scope.ns[1])) * x_shift;
+                        ctx.fillRect(x_coord, 40, p_width - Math.floor($scope.ns[1]) * x_shift, p_hight);
+                        x_coord_end = x_coord; // + Math.floor($scope.ns[1])*x_shift;
+                        ctx.closePath();
+
+                        ctx.beginPath();
+                        ctx.strokeStyle = 'blue';
+                        ctx.fillStyle = 'blue';
+                        // vertical lines
+                        y_shift = p_hight * $scope.card_length / $scope.sz[0];
+                        x_coord = c.width / 2.0 - p_width / 2.0;
+                        for (it = 0; it < Math.floor($scope.ns[0]); it++) {
+                            ctx.moveTo(x_coord, 40 + y_shift * (it + 1));
+                            ctx.lineTo(parseFloat(p_width) + x_coord, 40 + y_shift * (it + 1));
+                            ctx.stroke();
+                        }
+                        y_coord = 40 + y_shift * Math.floor($scope.ns[0]);
+
+                        console.log("   " + Math.abs(p_hight - Math.floor($scope.ns[0]) * y_shift) + "  ");
+                        if (Math.abs(p_hight - Math.floor($scope.ns[0]) * y_shift) > 0.0001) {
+                            ctx.fillRect(x_coord, y_coord, p_width, p_hight - Math.floor($scope.ns[0]) * y_shift);
+                        }
+                        //ctx.fillText( $scope.ns, 10, 60);
+                        ctx.closePath();
+
+
+                        ctx.beginPath();
+                        ctx.globalAlpha = 1;
+                        ctx.strokeStyle = 'black';
+                        ctx.fillStyle = 'black';
+                        ctx.fillText('Sheet size : [ ' + $scope.sz[0] + ' x ' + $scope.sz[1] + ' ]', parseFloat(c.width / 2 - 50), 8.0);
+                        ctx.fillText('Box/piece size : [ ' + parseFloat(card_length.value).toFixed(2) + ' x ' + parseFloat(card_width.value).toFixed(2) + ' ]', c.width / 2 - 66.0, 22.0);
+
+                        blue_area = ($scope.sz[0] - Math.floor($scope.ns[0]) * $scope.card_length);
+                        if (Math.abs(blue_area) > 0.00001) {
+                            ctx.strokeStyle = 'blue';
+                            ctx.fillStyle = 'blue';
+                            ctx.fillText('Blue  Area: [' + blue_area.toFixed(2) + ' x ' + $scope.sz[1] + ']', (c.width - p_width) / 2.0 + 4, 36 + Math.floor($scope.ns[0]) * y_shift);
+                        }
+                        ctx.save();
+                        red_area = ($scope.sz[1] - Math.floor($scope.ns[1]) * $scope.card_width);
+                        if (Math.abs(red_area) > 0.000001) {
+                            ctx.textAlign = "left";
+                            ctx.textBaseline = "middle";
+                            ctx.translate(x_coord_end - 8, 140);
+                            ctx.rotate(-Math.PI / 2);
+                            ctx.strokeStyle = 'red';
+                            ctx.fillStyle = 'red';
+                            ctx.fillText('Red  Area: [' + $scope.sz[0] + ' x ' + red_area.toFixed(2) + ']', 0, 0);
+                        }
+                        ctx.restore();
+                        ctx.closePath();
+
+                        // vertical green line
+                        draw_vertical_line(ctx, c.width / 2.0 - p_width / 2.0, 40, 40 + y_shift, $scope.card_length + "\'\'")
+
+
+                        // horizontal green line
+                        draw_horizontal_line(ctx, c.width / 2.0 - p_width / 2.0, c.width / 2.0 - p_width / 2.0 + x_shift, 40, $scope.card_width + "\'\'");
+
+                        //ctx.restore();
+                        console.log(c.width / 2.0 - p_width / 2.0 + x_shift)
 
-                szs = [];
-                for (it = 0; it < szs_orig.length; it = it + 1) {
-                    szs[szs.length] = [szs_orig[it][0], szs_orig[it][1]];
-                    szs[szs.length] = [szs_orig[it][1], szs_orig[it][0]];
-                }
-
-                $scope.mainFunction();
-
-            }
-
-
-
-            $scope.mainFunction = function() {
-
-                console.log($scope.material);
-                if (typeof $scope.material == 'undefined') {
-                    $scope.material = 'card';
-                }
-
-                var params = {
-                    card_length: card_length.value,
-                    card_width: card_width.value,
-                    card_qty: card_qty.value,
-                    boxes_per_lw: boxes_per_lw.value,
-                    pkr_per_kg: pkr_per_kg.value,
-                    gsm: gsm.value,
-                    sheets_per_packet: sheets_per_packet.value,
-                    szs: szs
-                };
-
-                $scope.szs = szs;
-
-                res = cl_packet_size(params);
-                $scope.sz = res.sz;
-                $scope.req_pck_num = res.req_pck_num;
-                $scope.output_qty = res.output_qty;
-                $scope.output_qty_per_pck = res.output_qty_per_pck;
-                $scope.cost_per_pck = res.cost_per_pck;
-                $scope.total_cost = res.total_cost;
-                $scope.cost_per_piece = res.cost_per_piece;
-                $scope.ns = res.ns;
-
-
-
-                $scope.wastage = res.minima * res.output_qty;
-                if ($scope.wastage <= 250) {
-                    $scope.wastage_status = " :) ";
-
-                } else {
-                    $scope.wastage_status = " Caution: wastage cost is high :(";
-
-                }
-                $scope.generatePlot();
-
-            }
-            $scope.page = 'first';
-
-            $scope.generatePlot = function() {
-                var c = document.getElementById("sheet_canvas");
-
-                c.width = 400;
-                c.height = 600;
-                var ctx = c.getContext("2d");
-
-                //ctx.clear();
-                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                ctx.beginPath();
-
-
-                ctx.globalAlpha = 0.5;
-                p_width = 220;
-                p_hight = 220 * ($scope.sz[0] / $scope.sz[1]);
-                // draw rectangle
-                x_coord = c.width / 2.0 - p_width / 2.0;
-
-                c.width = 400;
-                c.height = p_hight + 60;
-
-                ctx.strokeRect(x_coord, 40.0, parseFloat(p_width), p_hight);
-
-                ctx.strokeStyle = 'red';
-                ctx.fillStyle = 'red';
-
-                ctx.beginPath();
-                // horizontal lines                    
-                x_shift = (p_width * $scope.card_width / $scope.sz[1]);
-                for (it = 0; it < Math.floor($scope.ns[1]); it++) {
-                    ctx.moveTo(c.width / 2.0 - p_width / 2.0 + (it + 1) * x_shift, 40);
-                    ctx.lineTo(c.width / 2.0 - p_width / 2.0 + (it + 1) * x_shift, p_hight + 40);
-                    ctx.stroke();
-                }
-                x_coord = c.width / 2.0 - p_width / 2.0 + (Math.floor($scope.ns[1])) * x_shift;
-                ctx.fillRect(x_coord, 40, p_width - Math.floor($scope.ns[1]) * x_shift, p_hight);
-                x_coord_end = x_coord; // + Math.floor($scope.ns[1])*x_shift;
-                ctx.closePath();
-
-                ctx.beginPath();
-                ctx.strokeStyle = 'blue';
-                ctx.fillStyle = 'blue';
-                // vertical lines
-                y_shift = p_hight * $scope.card_length / $scope.sz[0];
-                x_coord = c.width / 2.0 - p_width / 2.0;
-                for (it = 0; it < Math.floor($scope.ns[0]); it++) {
-                    ctx.moveTo(x_coord, 40 + y_shift * (it + 1));
-                    ctx.lineTo(parseFloat(p_width) + x_coord, 40 + y_shift * (it + 1));
-                    ctx.stroke();
-                }
-                y_coord = 40 + y_shift * Math.floor($scope.ns[0]);
-
-                console.log("   " + Math.abs(p_hight - Math.floor($scope.ns[0]) * y_shift) + "  ");
-                if (Math.abs(p_hight - Math.floor($scope.ns[0]) * y_shift) > 0.0001) {
-                    ctx.fillRect(x_coord, y_coord, p_width, p_hight - Math.floor($scope.ns[0]) * y_shift);
-                }
-                //ctx.fillText( $scope.ns, 10, 60);
-                ctx.closePath();
-
-
-                ctx.beginPath();
-                ctx.globalAlpha = 1;
-                ctx.strokeStyle = 'black';
-                ctx.fillStyle = 'black';
-                ctx.fillText('Sheet size : [ ' + $scope.sz[0] + ' x ' + $scope.sz[1] + ' ]', parseFloat(c.width / 2 - 50), 8.0);
-                ctx.fillText('Box/piece size : [ ' + parseFloat(card_length.value).toFixed(2) + ' x ' + parseFloat(card_width.value).toFixed(2) + ' ]', c.width / 2 - 66.0, 22.0);
-
-                blue_area = ($scope.sz[0] - Math.floor($scope.ns[0]) * $scope.card_length);
-                if (Math.abs(blue_area) > 0.00001) {
-                    ctx.strokeStyle = 'blue';
-                    ctx.fillStyle = 'blue';
-                    ctx.fillText('Blue  Area: [' + blue_area.toFixed(2) + ' x ' + $scope.sz[1] + ']', (c.width - p_width) / 2.0 + 4, 36 + Math.floor($scope.ns[0]) * y_shift);
-                }
-                ctx.save();
-                red_area = ($scope.sz[1] - Math.floor($scope.ns[1]) * $scope.card_width);
-                if (Math.abs(red_area) > 0.000001) {
-                    ctx.textAlign = "left";
-                    ctx.textBaseline = "middle";
-                    ctx.translate(x_coord_end - 8, 140);
-                    ctx.rotate(-Math.PI / 2);
-                    ctx.strokeStyle = 'red';
-                    ctx.fillStyle = 'red';
-                    ctx.fillText('Red  Area: [' + $scope.sz[0] + ' x ' + red_area.toFixed(2) + ']', 0, 0);
-                }
-                ctx.restore();
-                ctx.closePath();
-
-                // vertical green line
-                draw_vertical_line(ctx, c.width / 2.0 - p_width / 2.0, 40, 40 + y_shift, $scope.card_length + "\'\'")
-
-
-                // horizontal green line
-                draw_horizontal_line(ctx, c.width / 2.0 - p_width / 2.0, c.width / 2.0 - p_width / 2.0 + x_shift, 40, $scope.card_width + "\'\'");
-
-                //ctx.restore();
-                console.log(c.width / 2.0 - p_width / 2.0 + x_shift)
-
-            };
-
-        });
-
-        function draw_horizontal_line(ctx, x1, x2, y, txt) {
-            ctx.save();
-            ctx.beginPath();
-
-            ctx.strokeStyle = 'black';
-            ctx.fillStyle = 'black';
-            ctx.lineWidth = 0.8;
-            ctx.moveTo(x1, y - 7);
-            ctx.lineTo(x2, y - 7);
-            ctx.stroke();
-
-            ctx.moveTo(x1, y - 2);
-            ctx.lineTo(x1, y - 12);
-            ctx.stroke();
-
-            ctx.moveTo(x2, y - 2);
-            ctx.lineTo(x2, y - 12);
-            ctx.stroke();
-
-            ctx.closePath();
-
-            ctx.fillText(txt, x1 + (x2 - x1) / 2 - 5, y - 7 - 2);
-
-            ctx.restore();
-        }
-
-        function draw_vertical_line(ctx, x, y1, y2, txt) {
-            ctx.save();
-            ctx.beginPath();
-
-            ctx.strokeStyle = 'black';
-            ctx.fillStyle = 'black';
-            ctx.lineWidth = 0.8;
-            ctx.moveTo(x - 7, y1);
-            ctx.lineTo(x - 7, y2);
-            ctx.stroke();
-
-            ctx.moveTo(x - 12, y1);
-            ctx.lineTo(x - 2, y1);
-            ctx.stroke();
-
-            ctx.moveTo(x - 12, y2);
-            ctx.lineTo(x - 2, y2);
-            ctx.stroke();
-            ctx.closePath();
-
-            ctx.fillText(txt, x - 7 - 22, y1 + (y2 - y1) / 2);
-
-            ctx.restore();
-
-        }
-
-
-        function cl_packet_size(x) {
-            ns = [];
-            minima = Number.POSITIVE_INFINITY;
-            ind = 1;
-            for (it = 0; it < x.szs.length; it++) {
-                ns[ns.length] = [x.szs[it][0] / x.card_length, x.szs[it][1] / x.card_width];
-
-                // wastage per sheet
-                l_wastage = x.szs[it][0] - Math.floor(ns[it][0]) * x.card_length;
-                w_wastage = x.szs[it][1] - Math.floor(ns[it][1]) * x.card_width;
-
-                e_L = l_wastage * x.szs[it][1];
-                e_R = w_wastage * x.szs[it][0];
-
-                wastage = e_L + e_R - l_wastage * w_wastage;
-
-                pck_cnt = x.card_qty / (Math.floor(ns[it][0]) * Math.floor(ns[it][1]) * x.boxes_per_lw * x.sheets_per_packet);
-                req_pck_num = pck_cnt; //Math.ceil(pck_cnt);
-                output_qty = req_pck_num * x.sheets_per_packet * Math.floor(ns[it][0]) * Math.floor(ns[it][1]) * x.boxes_per_lw;
-
-                wastage = wastage / output_qty;
-                temp = wastage * pck_cnt * x.sheets_per_packet * (1 / 1550.00310) * (x.gsm / 1000) * x.pkr_per_kg;
-
-                if (temp < minima) {
-                    minima = temp;
-                    ind = it;
-
-                    sz_min = szs[ind];
-                    ns_min = ns[ind];
-
-                    req_pck_num_min = req_pck_num;
-                    output_qty_min = output_qty;
-
-                    output_qty_per_pck = output_qty / req_pck_num;
-
-                    cost_per_pck = x.pkr_per_kg * x.sheets_per_packet * (x.gsm / 1000) * sz_min[0] * sz_min[1] * (1 / 1550.00310);
-                    total_cost = req_pck_num * cost_per_pck;
-                    cost_per_piece = total_cost / output_qty; //round(total_cost/output_qty,8);
-
-                    y = {
-                        ind: ind,
-                        ns: ns_min,
-                        sz: sz_min,
-                        minima: minima,
-                        req_pck_num: req_pck_num_min,
-                        output_qty: output_qty_min,
-                        output_qty_per_pck: output_qty_per_pck,
-                        cost_per_pck: cost_per_pck,
-                        total_cost: total_cost,
-                        cost_per_piece: cost_per_piece
                     };
 
-                }
-            }
-            console.log(x.card_length);
-            console.table(szs);
-            console.table(ns);
-            return y;
-        }
+                });
 
-        window.onload = function() {
-            document.getElementById('card_button').click();
-        };
-    </script>
+                function draw_horizontal_line(ctx, x1, x2, y, txt) {
+                    ctx.save();
+                    ctx.beginPath();
+
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = 'black';
+                    ctx.lineWidth = 0.8;
+                    ctx.moveTo(x1, y - 7);
+                    ctx.lineTo(x2, y - 7);
+                    ctx.stroke();
+
+                    ctx.moveTo(x1, y - 2);
+                    ctx.lineTo(x1, y - 12);
+                    ctx.stroke();
+
+                    ctx.moveTo(x2, y - 2);
+                    ctx.lineTo(x2, y - 12);
+                    ctx.stroke();
+
+                    ctx.closePath();
+
+                    ctx.fillText(txt, x1 + (x2 - x1) / 2 - 5, y - 7 - 2);
+
+                    ctx.restore();
+                }
+
+                function draw_vertical_line(ctx, x, y1, y2, txt) {
+                    ctx.save();
+                    ctx.beginPath();
+
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = 'black';
+                    ctx.lineWidth = 0.8;
+                    ctx.moveTo(x - 7, y1);
+                    ctx.lineTo(x - 7, y2);
+                    ctx.stroke();
+
+                    ctx.moveTo(x - 12, y1);
+                    ctx.lineTo(x - 2, y1);
+                    ctx.stroke();
+
+                    ctx.moveTo(x - 12, y2);
+                    ctx.lineTo(x - 2, y2);
+                    ctx.stroke();
+                    ctx.closePath();
+
+                    ctx.fillText(txt, x - 7 - 22, y1 + (y2 - y1) / 2);
+
+                    ctx.restore();
+
+                }
+
+
+                function cl_packet_size(x) {
+                    ns = [];
+                    minima = Number.POSITIVE_INFINITY;
+                    ind = 1;
+                    for (it = 0; it < x.szs.length; it++) {
+                        ns[ns.length] = [x.szs[it][0] / x.card_length, x.szs[it][1] / x.card_width];
+
+                        // wastage per sheet
+                        l_wastage = x.szs[it][0] - Math.floor(ns[it][0]) * x.card_length;
+                        w_wastage = x.szs[it][1] - Math.floor(ns[it][1]) * x.card_width;
+
+                        e_L = l_wastage * x.szs[it][1];
+                        e_R = w_wastage * x.szs[it][0];
+
+                        wastage = e_L + e_R - l_wastage * w_wastage;
+
+                        pck_cnt = x.card_qty / (Math.floor(ns[it][0]) * Math.floor(ns[it][1]) * x.boxes_per_lw * x.sheets_per_packet);
+                        req_pck_num = pck_cnt; //Math.ceil(pck_cnt);
+                        output_qty = req_pck_num * x.sheets_per_packet * Math.floor(ns[it][0]) * Math.floor(ns[it][1]) * x.boxes_per_lw;
+
+                        wastage = wastage / output_qty;
+                        temp = wastage * pck_cnt * x.sheets_per_packet * (1 / 1550.00310) * (x.gsm / 1000) * x.pkr_per_kg;
+
+                        if (temp < minima) {
+                            minima = temp;
+                            ind = it;
+
+                            sz_min = szs[ind];
+                            ns_min = ns[ind];
+
+                            req_pck_num_min = req_pck_num;
+                            output_qty_min = output_qty;
+
+                            output_qty_per_pck = output_qty / req_pck_num;
+
+                            cost_per_pck = x.pkr_per_kg * x.sheets_per_packet * (x.gsm / 1000) * sz_min[0] * sz_min[1] * (1 / 1550.00310);
+                            total_cost = req_pck_num * cost_per_pck;
+                            cost_per_piece = total_cost / output_qty; //round(total_cost/output_qty,8);
+
+                            y = {
+                                ind: ind,
+                                ns: ns_min,
+                                sz: sz_min,
+                                minima: minima,
+                                req_pck_num: req_pck_num_min,
+                                output_qty: output_qty_min,
+                                output_qty_per_pck: output_qty_per_pck,
+                                cost_per_pck: cost_per_pck,
+                                total_cost: total_cost,
+                                cost_per_piece: cost_per_piece
+                            };
+
+                        }
+                    }
+                    console.log(x.card_length);
+                    console.table(szs);
+                    console.table(ns);
+                    return y;
+                }
+
+                window.onload = function() {
+                    document.getElementById('card_button').click();
+                };
+            </script>
 </body>
 
 </html>
