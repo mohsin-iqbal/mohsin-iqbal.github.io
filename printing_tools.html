@@ -196,7 +196,7 @@
                             return c.substring(name.length, c.length);
                         }
                     }
-                    return "";
+                    return "9";
                 }
 
                 function setCookie(card_length) {
@@ -207,10 +207,10 @@
                 var app = angular.module('sizeEstimation_app', []);
                 app.controller('mainController', function($scope) {
 
-                    if (getCookie('card_length').length != 0)
-                        $scope.card_length = getCookie('card_length')
-                    else
-                        $scope.card_length = 9;
+                    //if (getCookie('card_length').length != 0)
+                    $scope.card_length = getCookie('card_length')
+                        //else
+                        //   $scope.card_length = 9;
 
                     $scope.card_width = 8.8;
                     //setCookie(card_length.value);
