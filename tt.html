@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html ng-app='mycookieapp'>
+
+<head>
+    <title>AngularJs cookie example</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-cookies.min.js"></script>
+
+</head>
+
+<body>
+    <div ng-controller="cookiectrl"> Enter Username:
+        <input type="text" ng-model="username" />
+        <br/>
+        <input type="button" value="setCookie" ng-click="getcookies()" />
+        <input type="button" value="List all Cookies" ng-click="getcookies()" />
+        <input type="button" value="Delete Cookies" ng-click="deleteCookies()" />
+        <div ng-repeat="i in existingCookies">{{existingCookies}} {{i}}
+        </div>
+        <div>
+
+            <script>
+                angular.module('mycookieapp', ['ngCookies']).controller('cookiectrl', ['$scope', '$cookies', '$cookieStore',
+                    function($scope, $cookies, $cookieStore) {
+                        $scope.setcookies = function() {
+                            //$cookies.firstuser=$scope.username;
+                            $cookieStore.put('seconduser', $scope.username);
+                            alert("Cookie Added");
+                        };
+                        $scope.getcookies = function() {
+                            if ($cookieStore.get('seconduser') == "siva") {
+                                alert("Cookie already exist with name");
+                                $scope.existingCookies = $cookies;
+                            } else
+                                $scope.setcookies();
+                        };
+
+                        $scope.deleteCookies = function() {
+                            $cookies = [];
+                        }
+                    }
+                ]);
+            </script>
+</body>
+
+</html>
