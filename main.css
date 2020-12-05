@@ -1,5 +1,15 @@
+@font-face {
+    font-family: "Roboto-Light";
+    src: url("Roboto/Roboto-Light.ttf");
+}
+
+@font-face {
+    font-family: "Roboto-Regular";
+    src: url("Roboto/Roboto-Regular.ttf");
+}
+
 body {
-    font-family: 'Noto Serif', serif;
+    font-family: Roboto-Light;
     margin: 60px auto;
     width: 70%;
 }
@@ -10,7 +20,7 @@ tr.spaceUnder>td {
 
 nav ul,
 footer ul {
-    font-family: 'Noto Serif', serif;
+    font-family: Roboto-Regular;
     padding: 0px;
     list-style: none;
     font-weight: bold;
@@ -32,8 +42,8 @@ a:hover {
 }
 
 h1 {
-    font-size: 3em;
-    font-family: 'Noto Serif', serif;
+    font-size: 2.5em;
+    font-family: Roboto-Light;
 }
 
 p {
@@ -43,7 +53,7 @@ p {
 }
 
 footer {
-    border-top: 1px solid #d5d5d5;
+    border-top: 1px solid #9e9393;
     font-size: .8em;
 }
 
